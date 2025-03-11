@@ -21,20 +21,14 @@ export default function Chatbot() {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "https://telecom-corp-agent.onrender.com/query/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: input }),
-        }
-      );
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: input }),
+      });
 
       const data = await response.json();
-      setMessages([
-        ...newMessages,
-        { text: data.response.output, sender: "bot" },
-      ]);
+      setMessages([...newMessages, { text: data.response, sender: "bot" }]);
     } catch (error) {
       console.error("Error:", error);
       setMessages([

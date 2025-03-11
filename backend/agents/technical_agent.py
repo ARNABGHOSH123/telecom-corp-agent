@@ -1,49 +1,31 @@
-from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
-from llama_index.core import settings
-from llama_index.embeddings.openai import OpenAIEmbedding
-from llama_index.vector_stores.faiss import FaissVectorStore
-from llama_index.llms.openai import OpenAI
-from langchain_community.tools import Tool
+from utils.rag_seed_error_code import faiss_indexes
 from config import settings
-import faiss
+from langchain_openai import OpenAI
 
-def load_and_index_error_codes(docx_file):
-    documents = SimpleDirectoryReader(input_files=[docx_file]).load_data()
-
-    settings.embed_model = OpenAIEmbedding(model="text-embedding-ada-002", api_key=settings.OPENAI_API_KEY)
-
-    faiss_index = faiss.IndexFlatL2(1536)
-    vector_store = FaissVectorStore(faiss_index)
-
-    index = VectorStoreIndex.from_documents(documents, vector_store=vector_store)
-
-    return index
+llm = OpenAI(api_key=settings.OPENAI_API_KEY)
 
 
-docx_path = "data/Error Codes.docx"
-index = load_and_index_error_codes(docx_path)
+def technical_agent(query):
+    faiss_results = faiss_indexes.similarity_search_with_score(query, k=10)
 
-def query_error_code(query):
-    retriever = index.as_retriever(similarity_top_k=2)
-    results = retriever.retrieve(query)
-
-    if not results:
+    if not faiss_results or len(faiss_results) == 0:
         return "No relevant information found. Please refine your query."
 
-    llm = OpenAI(model="gpt-4", temperature=0)
-    response = llm.complete(
-        f"You are a technical support AI. Based on the following information, provide a structured response:\n\n"
-        f"{results[0].text}\n\n"
-        f"User Query: {query}\n\n"
-        f"Response:"
+    context = "\n\n".join(
+        [f"Doc {i+1}: {doc.page_content}" for i, (doc, _) in enumerate(faiss_results)]
     )
 
-    return response
+    prompt = f"""
+    You are an AI expert in choosing best possible content based on the multiple options given.
+    Given the following query:\n "{query}", \nchoose the most relevant error code explanation from the documents below.
 
-techincal_agent = Tool(
-    name="ErrorLookupTool",
-    func=query_error_code,
-    description="Use this tool to get detailed and structured information about an error code. "
-    "It will provide an exact answer, including meaning, cause, and resolution, based strictly on "
-    "the retrieved FAISS results. It follows clear rules to ensure responses remain specific and relevant.",
-)
+    {context}
+
+    Choose the most relevant document and prepare a very easy-to-read human readable response after understanding user's query deeply.
+    - Dont include the user query text in the final response.
+    - Dont mention any document numbers.
+    """
+
+    response = llm.invoke(prompt)
+
+    return response
