@@ -4,14 +4,13 @@ import sqlite3
 from llama_index.experimental.query_engine import PandasQueryEngine
 import pandas as pd
 import re
-from config import settings
+from config import settings as config_settings
 
-DB_PATH = "telecom_marketing_data.db"
-llm = OpenAI(api_key=settings.OPENAI_API_KEY)
+llm = OpenAI(api_key=config_settings.OPENAI_API_KEY)
 
-llama_llm = LlamaOpenAi(temperature=0, api_key=settings.OPENAI_API_KEY)
+llama_llm = LlamaOpenAi(temperature=0, api_key=config_settings.OPENAI_API_KEY)
 
-df = pd.read_csv("data/telecom.csv")
+df = pd.read_csv(config_settings.TELECOM_DATA_SOURCE_PATH)
 query_engine = PandasQueryEngine(df=df, llm=llama_llm)
 
 
@@ -22,7 +21,7 @@ def fetch_pandas_output(query):
 
 def get_sqlite_schema():
     """Extract column names from the SQLite database for LLM context."""
-    with sqlite3.connect(DB_PATH) as conn:
+    with sqlite3.connect(config_settings.TELECOM_DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute("PRAGMA table_info(df);")
         columns = cursor.fetchall()
@@ -41,7 +40,7 @@ def validate_sql(query):
 
 
 def execute_sql(query):
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(config_settings.TELECOM_DB_NAME)
     cur = conn.cursor()
     cur.execute(query)
     rows = cur.fetchall()

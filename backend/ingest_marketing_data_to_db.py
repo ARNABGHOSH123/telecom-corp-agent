@@ -1,12 +1,11 @@
 import sqlite3
+from config import settings as config_settings
 import pandas as pd
 
-df = pd.read_csv("data/telecom.csv")
+def seed_db():
+    df = pd.read_csv(config_settings.TELECOM_DATA_SOURCE_PATH)
+    df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
+    conn = sqlite3.connect(config_settings.TELECOM_DB_NAME)
+    df.to_sql("df", conn, if_exists="replace", index=False)
+    conn.close()
 
-df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
-
-conn = sqlite3.connect("telecom_marketing_data.db")
-
-df.to_sql("df", conn, if_exists="replace", index=False)
-
-conn.close()

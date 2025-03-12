@@ -36,25 +36,34 @@ def fallback():
 def nlp_answer_generator(state):
     output = state["output"]
     intent = state["intent"]
+
     if "query" not in state:
         return {"final_response": output}
 
-    if intent == "technical":
-        return {
-            "final_response": output
-        }  ## Since Technical agent brings a more context specific NLP response
-
-    # Prepare NLP response for any other query
     query = state["query"]
 
-    prompt = f"""
-    You are a technical support AI. Based on the following information, provide a structured and most relevant response.
-    Format your response in a structured and easy-to-read way for the user.
+    if intent == "technical":
+        prompt = f"""
+        You are a technical support AI. Based on the following information, choose the best possible content based on the multiple options given.
+        Given the following query:\n "{query}", \nchoose the most relevant error code explanation from the documents below.
 
-    User query: {query}\n
-    Output: {output}\n
-    Response:
-    """
+        {output}
+
+        Choose the most relevant document and prepare a very easy-to-read human readable response after understanding user's query deeply.
+        - Dont include the user query text in the final response.
+        - Dont mention any document numbers.
+
+        Response:
+        """
+    else:
+        prompt = f"""
+        You are a technical support AI and a marketing expert. Based on the following information, provide a structured and most relevant response.
+        Format your response in a structured and easy-to-read way for the user.
+
+        User query: {query}\n
+        Output: {output}\n
+        Response:
+        """
 
     final_response = llm.invoke(prompt)
 
@@ -80,9 +89,7 @@ def handle_query(query: str):
     except Exception as e:
         print(f"Error: {str(e)}")
         if "context_length_exceeded" in str(e):
-            user_response = (
-                "Output is very large. Please ask for more specific queries."
-            )
+            user_response = "User query / answer is very large. Please ask for more specific and short queries."
         else:
             user_response = fallback()
 

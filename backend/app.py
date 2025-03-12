@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from models.request_models import ErrorQuery
 from services.multi_agent_service import handle_query
 from dotenv import load_dotenv
+from ingest_marketing_data_to_db import seed_db
 import uvicorn
 import os
 
@@ -29,4 +30,5 @@ def process_query(request: ErrorQuery):
 
 if __name__== '__main__':
     port = int(os.getenv("PORT", 8000))
+    seed_db()
     uvicorn.run(app,host="0.0.0.0", port=port)

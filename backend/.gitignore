@@ -14,6 +14,8 @@ Pipfile.lock
 # Flask instance and cache
 instance/
 *.sqlite3
+*.db
+vectorstore/
 *.sqlite
 migrations/
 
