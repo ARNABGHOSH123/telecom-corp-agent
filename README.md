@@ -2,14 +2,14 @@
 
 This repository contains all the code regarding the entire development of telecom corp agent.
 
-Deployed URL:-
+## Deployed URL:-
 
 [Application Deployed URL](https://telecom-corp-agent-arnab.netlify.app/)
 
-Architecture used:-
+## Architecture used:-
 
 ![System architecture](backend/assets/system_architecture.png)
 
-Multi-agent details (Mermaid):-
+## Multi-agent details (Mermaid):-
 
 [![](https://mermaid.ink/img/pako:eNqVkc9qwzAMxl_F-LRB-wKBDdam3amn9rS4GM1WE1P_CY5MGU3ffY5LdlhhsJs-8fuEpO_KVdDIK95G6Dt2qIVn7K1RIURtPFCIR7Zcvo579HpgxhN6GtnqCdpcyAEtqsw8T65VAe_IC6HqvFFgR7ZuDrNgxcYoBHt8sDiIZyTj25HVzW4Wf1oCdRhHtmlOYO0nqHNB1gWJcGEhUZ_yvtvG216CHy4YZZ6HsVw2wfV_4O0Es_dGyvwOKUtv89ATJIgvuMPowOj82-vECZ6XdSh4lUuNJ0iWBBf-llFIFPZfXvGKYsIFjyG1Ha_yVUNWqddAWBvIGbmfbg_-IwT3i9pok5ed52BRu3vCJejbN44FrZc?type=png)](https://mermaid.live/edit#pako:eNqVkc9qwzAMxl_F-LRB-wKBDdam3amn9rS4GM1WE1P_CY5MGU3ffY5LdlhhsJs-8fuEpO_KVdDIK95G6Dt2qIVn7K1RIURtPFCIR7Zcvo579HpgxhN6GtnqCdpcyAEtqsw8T65VAe_IC6HqvFFgR7ZuDrNgxcYoBHt8sDiIZyTj25HVzW4Wf1oCdRhHtmlOYO0nqHNB1gWJcGEhUZ_yvtvG216CHy4YZZ6HsVw2wfV_4O0Es_dGyvwOKUtv89ATJIgvuMPowOj82-vECZ6XdSh4lUuNJ0iWBBf-llFIFPZfXvGKYsIFjyG1Ha_yVUNWqddAWBvIGbmfbg_-IwT3i9pok5ed52BRu3vCJejbN44FrZc)
