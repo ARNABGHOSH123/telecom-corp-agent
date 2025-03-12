@@ -3,7 +3,7 @@ from langchain.schema import Document
 from config import settings as config_settings
 from docx import Document as DocxDocument
 from utils.get_embeddings import embeddings
-import os
+
 
 def load_faiss_index(index_path):
     vectorstore = FAISS.load_local(
@@ -70,14 +70,7 @@ def load_error_codes(docx_file):
 
 
 doc_file_path = config_settings.ERROR_CODE_DATA_SOURCE_PATH
-indexes_path = config_settings.VECTORE_DATASTORE_PATH
-
-# Only create vector store if it does not exist
-if not os.path.exists(indexes_path):
-    documents = load_error_codes(doc_file_path)
-    create_faiss_index(documents, indexes_path)
-    print("Vector store created successfully.")
-else:
-    print("Vector store already exists. Skipping creation.")
-
+indexes_path =  config_settings.VECTORE_DATASTORE_PATH
+documents = load_error_codes(doc_file_path)
+create_faiss_index(documents, indexes_path)
 faiss_indexes = load_faiss_index(indexes_path)
