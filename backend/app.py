@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from models.request_models import ErrorQuery
 from services.multi_agent_service import handle_query
 from dotenv import load_dotenv
-from ingest_marketing_data_to_db import seed_db
+from utils.ingest_marketing_data_to_db import seed_db
 import uvicorn
 import os
 
